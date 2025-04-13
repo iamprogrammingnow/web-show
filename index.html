@@ -2,26 +2,190 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>模板展示</title>
-    <link rel="stylesheet" href="style.css" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Website Template Gallery</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet"/>
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f9f9f9;
+        }
+
+        header {
+            background: linear-gradient(135deg, #4b6cb7, #182848);
+            color: white;
+            padding: 60px 20px;
+            text-align: center;
+        }
+
+        header h1 {
+            margin: 0;
+            font-size: 2.5rem;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 40px auto;
+            padding: 0 20px;
+        }
+
+        .search-box {
+            margin-bottom: 30px;
+            text-align: center;
+        }
+
+        .search-box input {
+            padding: 12px 20px;
+            width: 100%;
+            max-width: 500px;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            font-size: 16px;
+        }
+
+        .group-title {
+            font-size: 1.5rem;
+            margin: 40px 0 20px;
+            color: #333;
+            border-bottom: 2px solid #ddd;
+            padding-bottom: 5px;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+            gap: 24px;
+        }
+
+        .card {
+            background: white;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+            transition: transform 0.2s;
+        }
+
+        .card:hover {
+            transform: translateY(-4px);
+        }
+
+        .card img {
+            width: 100%;
+            height: 180px;
+            object-fit: cover;
+        }
+
+        .card a {
+            text-decoration: none;
+            color: #333;
+            display: block;
+            padding: 16px;
+            font-weight: 600;
+            font-size: 1rem;
+        }
+    </style>
 </head>
 <body>
-<h1>网站模板列表</h1>
-<div class="gallery">
-    <div class="template">
-        <a href="https://example.com/template1" target="_blank">
-            <img src="https://via.placeholder.com/300x200?text=Template+1" alt="Template 1" />
-        </a>
-        <p>模板一</p>
+<header>
+    <h1>We create a useful website for you!</h1>
+</header>
+
+<div class="container">
+    <div class="search-box">
+        <input type="text" id="searchInput" placeholder="Search templates..." onkeyup="filterTemplates()"/>
     </div>
-    <div class="template">
-        <a href="https://example.com/template2" target="_blank">
-            <img src="https://via.placeholder.com/300x200?text=Template+2" alt="Template 2" />
-        </a>
-        <p>模板二</p>
-    </div>
-    <!-- 可以继续添加更多模板 -->
+
+    <div id="templateContainer"></div>
 </div>
+
+<script>
+    const templates = [
+        { name: "Home 01 - Classic", url: "https://new-ella-demo.myshopify.com//?fts=0&preview_theme_id=123127857242", image: "https://themes.halothemes.com/marketplace/shopify-ella-ldp/assets/images/homepages/ella-home-1.jpg" },
+        { name: "Home 02 - Trendy Style", url: "https://new-ella-demo.myshopify.com//?fts=0&preview_theme_id=123126317146", image: "https://themes.halothemes.com/marketplace/shopify-ella-ldp/assets/images/homepages/ella-home-2.jpg" },
+        { name: "Home 03 - In Vogue", url: "https://new-ella-demo.myshopify.com//?fts=0&preview_theme_id=123126677594", image: "https://themes.halothemes.com/marketplace/shopify-ella-ldp/assets/images/homepages/ella-home-3.jpg" },
+        { name: "Home 04 - High Fashion", url: "https://new-ella-demo.myshopify.com//?fts=0&preview_theme_id=123126710362", image: "https://themes.halothemes.com/marketplace/shopify-ella-ldp/assets/images/homepages/ella-home-4.jpg" },
+        { name: "Home 05 - Surfing", url: "https://new-ella-demo.myshopify.com//?fts=0&preview_theme_id=123126775898", image: "https://themes.halothemes.com/marketplace/shopify-ella-ldp/assets/images/homepages/ella-home-5.jpg" },
+        { name: "Home 06 - Supermarket", url: "https://new-ella-demo.myshopify.com//?fts=0&preview_theme_id=123126808666", image: "https://themes.halothemes.com/marketplace/shopify-ella-ldp/assets/images/homepages/ella-home-6.jpg" },
+        { name: "Home 07 - Electronics", url: "https://new-ella-demo.myshopify.com//?fts=0&preview_theme_id=123126841434", image: "https://themes.halothemes.com/marketplace/shopify-ella-ldp/assets/images/homepages/ella-home-7.jpg" },
+        { name: "Home 08 - Large Catalogs", url: "https://new-ella-demo.myshopify.com//?fts=0&preview_theme_id=123126906970", image: "https://themes.halothemes.com/marketplace/shopify-ella-ldp/assets/images/homepages/ella-home-8.jpg" },
+        { name: "Home 09 - Pet Supplies Home", url: "https://new-ella-demo.myshopify.com//?fts=0&preview_theme_id=123127005274", image: "https://themes.halothemes.com/marketplace/shopify-ella-ldp/assets/images/homepages/ella-home-9.jpg" },
+        { name: "Home 10 - Jewelry", url: "https://new-ella-demo.myshopify.com//?fts=0&preview_theme_id=123127103578", image: "https://themes.halothemes.com/marketplace/shopify-ella-ldp/assets/images/homepages/ella-home-10.jpg" },
+        { name: "Home 11 - Health & Beauty", url: "https://new-ella-demo.myshopify.com//?fts=0&preview_theme_id=123127169114", image: "https://themes.halothemes.com/marketplace/shopify-ella-ldp/assets/images/homepages/ella-home-11.jpg" },
+        { name: "Home 12 - Men Fashion", url: "https://new-ella-demo.myshopify.com//?fts=0&preview_theme_id=123127234650", image: "https://themes.halothemes.com/marketplace/shopify-ella-ldp/assets/images/homepages/ella-home-12.jpg" },
+        { name: "Home 13 - Winter Sport", url: "https://new-ella-demo.myshopify.com//?fts=0&preview_theme_id=123127267418", image: "https://themes.halothemes.com/marketplace/shopify-ella-ldp/assets/images/homepages/ella-home-13.jpg" },
+        { name: "Home 14 - Automotive 1", url: "https://new-ella-demo.myshopify.com//?fts=0&preview_theme_id=123127300186", image: "https://themes.halothemes.com/marketplace/shopify-ella-ldp/assets/images/homepages/ella-home-14.jpg" },
+        { name: "Home 15 - Automotive 2", url: "https://new-ella-demo.myshopify.com//?fts=0&preview_theme_id=123127332954", image: "https://themes.halothemes.com/marketplace/shopify-ella-ldp/assets/images/homepages/ella-home-15.jpg" },
+        { name: "Home 16 - Games", url: "https://new-ella-demo.myshopify.com//?fts=0&preview_theme_id=123127365722", image: "https://themes.halothemes.com/marketplace/shopify-ella-ldp/assets/images/homepages/ella-home-16.jpg" },
+        { name: "Home 17 - Gym", url: "https://new-ella-demo.myshopify.com//?fts=0&preview_theme_id=123127464026", image: "https://themes.halothemes.com/marketplace/shopify-ella-ldp/assets/images/homepages/ella-home-17.jpg" },
+        { name: "Home 18 - Shoes", url: "https://new-ella-demo.myshopify.com//?fts=0&preview_theme_id=123190444122", image: "https://themes.halothemes.com/marketplace/shopify-ella-ldp/assets/images/homepages/ella-home-18.jpg" },
+        { name: "Home 19 - Swimwear", url: "https://new-ella-demo-11.myshopify.com//?fts=0&preview_theme_id=123360739379", image: "https://themes.halothemes.com/marketplace/shopify-ella-ldp/assets/images/homepages/ella-home-19.jpg" },
+        { name: "Home 20 - Furniture", url: "https://new-ella-demo-11.myshopify.com//?fts=0&preview_theme_id=123360804915", image: "https://themes.halothemes.com/marketplace/shopify-ella-ldp/assets/images/homepages/ella-home-20.jpg" },
+        { name: "Home 21 - Yoga", url: "https://new-ella-demo-11.myshopify.com//?fts=0&preview_theme_id=124314550323", image: "https://themes.halothemes.com/marketplace/shopify-ella-ldp/assets/images/homepages/ella-home-21.jpg" },
+        { name: "Home 22 - Eyes Wears", url: "https://new-ella-demo-11.myshopify.com//?fts=0&preview_theme_id=124305637427", image: "https://themes.halothemes.com/marketplace/shopify-ella-ldp/assets/images/homepages/ella-home-22.jpg" },
+        { name: "Home 23 - Plant+ Garden", url: "https://new-ella-demo-11.myshopify.com//?fts=0&preview_theme_id=124314517555", image: "https://themes.halothemes.com/marketplace/shopify-ella-ldp/assets/images/homepages/ella-home-23.jpg" },
+        { name: "Home 24 - Bicycle", url: "https://new-ella-demo-11.myshopify.com//?fts=0&preview_theme_id=124314583091", image: "https://themes.halothemes.com/marketplace/shopify-ella-ldp/assets/images/homepages/ella-home-24.jpg" },
+        { name: "Home 25 - Swimwear 2", url: "https://new-ella-demo-11.myshopify.com/?fts=0&preview_theme_id=124318384179", image: "https://themes.halothemes.com/marketplace/shopify-ella-ldp/assets/images/homepages/ella-home-25.jpg" },
+        { name: "Home 26 - Bagratica", url: "https://new-ella-demo-11.myshopify.com//?fts=0&preview_theme_id=124591734835", image: "https://themes.halothemes.com/marketplace/shopify-ella-ldp/assets/images/homepages/ella-home-26.jpg" },
+        { name: "Home 27 - Men Fashion 02", url: "https://new-ella-demo-11.myshopify.com//?fts=0&preview_theme_id=124693512243", image: "https://themes.halothemes.com/marketplace/shopify-ella-ldp/assets/images/homepages/ella-home-27.jpg" },
+        { name: "Home 28 - Single Product", url: "https://new-ella-demo-11.myshopify.com//?fts=0&preview_theme_id=126090510387", image: "https://themes.halothemes.com/marketplace/shopify-ella-ldp/assets/images/homepages/ella-home-28.jpg" },
+        { name: "Home 29 - Chic Couture", url: "https://new-ella-demo-11.myshopify.com//?fts=0&preview_theme_id=128559120435", image: "https://themes.halothemes.com/marketplace/shopify-ella-ldp/assets/images/homepages/ella-home-29.jpg" },
+        { name: "Home 30 - POD Store", url: "https://new-ella-demo-11.myshopify.com/?fts=0", image: "https://themes.halothemes.com/marketplace/shopify-ella-ldp/assets/images/homepages/ella-home-30.jpg" },
+        { name: "Home 31 - Wig Store", url: "https://new-ella-demo-11.myshopify.com/?fts=0&preview_theme_id=129669267507", image: "https://themes.halothemes.com/marketplace/shopify-ella-ldp/assets/images/homepages/ella-home-31.jpg" },
+        { name: "Home 32 - Suitcase Home", url: "https://new-ella-demo-11.myshopify.com//?fts=0&preview_theme_id=130992242739", image: "https://themes.halothemes.com/marketplace/shopify-ella-ldp/assets/images/homepages/ella-home-32.jpg" },
+        { name: "Home 33 - Coffee Shop", url: "https://new-ella.myshopify.com/?preview_theme_id=130564915298", image: "https://themes.halothemes.com/marketplace/shopify-ella-ldp/assets/images/homepages/ella-home-33.jpg" },
+        { name: "Home 34 - Lunch Set", url: "https://new-ella.myshopify.com/?preview_theme_id=131699703906", image: "https://themes.halothemes.com/marketplace/shopify-ella-ldp/assets/images/homepages/ella-home-34.jpg" },
+        { name: "Home 35 - Dietary Supplement", url: "https://new-ella.myshopify.com/?fts=0&preview_theme_id=133104730210", image: "https://themes.halothemes.com/marketplace/shopify-ella-ldp/assets/images/homepages/ella-home-35.jpg" }
+    ];
+
+    function groupTemplatesByKeyword(data) {
+        const groups = {};
+        data.forEach(template => {
+            const keyword = template.name.split(" ")[2] || "Others";
+            if (!groups[keyword]) groups[keyword] = [];
+            groups[keyword].push(template);
+        });
+        return groups;
+    }
+
+    function renderTemplates(filtered = templates) {
+        const container = document.getElementById("templateContainer");
+        container.innerHTML = "";
+        const grouped = groupTemplatesByKeyword(filtered);
+
+        for (const type in grouped) {
+            const title = document.createElement("div");
+            title.className = "group-title";
+            title.textContent = type;
+            container.appendChild(title);
+
+            const grid = document.createElement("div");
+            grid.className = "grid";
+
+            grouped[type].forEach(t => {
+                const card = document.createElement("div");
+                card.className = "card";
+                card.innerHTML = `
+            <a href="${t.url}" target="_blank">
+              <img src="${t.image}" alt="${t.name}"/>
+              ${t.name}
+            </a>
+          `;
+                grid.appendChild(card);
+            });
+
+            container.appendChild(grid);
+        }
+    }
+
+    function filterTemplates() {
+        const keyword = document.getElementById("searchInput").value.toLowerCase();
+        const filtered = templates.filter(t => t.name.toLowerCase().includes(keyword));
+        renderTemplates(filtered);
+    }
+
+    renderTemplates();
+</script>
 </body>
 </html>
