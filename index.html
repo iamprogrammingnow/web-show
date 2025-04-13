@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-    <title>Website Template Gallery</title>
+    <title>Website Gallery</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet"/>
     <style>
         body {
@@ -85,6 +85,17 @@
             font-weight: 600;
             font-size: 1rem;
         }
+
+        footer {
+            background-color: #333;
+            color: white;
+            text-align: center;
+            padding: 1rem;
+        }
+
+        footer p {
+            margin: 0;
+        }
     </style>
 </head>
 <body>
@@ -94,10 +105,14 @@
 
 <div class="container">
     <div class="search-box">
-        <input type="text" id="searchInput" placeholder="Search templates..." onkeyup="filterTemplates()"/>
+        <input type="text" id="searchInput" placeholder="Search website..." onkeyup="filterTemplates()"/>
     </div>
 
     <div id="templateContainer"></div>
+    <footer>
+        <p>&copy; 2025 Prettiers Website Showcase | Email: marketchor@gmail.com</p>
+    </footer>
+
 </div>
 
 <script>
